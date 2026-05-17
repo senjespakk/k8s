@@ -1,1 +1,69 @@
 # k8s
+Kubernetes GitOps Repository
+
+This repository manages Kubernetes deployments using GitOps principles with Kustomize. All environment configurations are version-controlled and deployed automatically through a continuous delivery system.
+
+📁 Repository Structure
+k8s/
+├── base/                  # Shared application manifests
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   └── kustomization.yaml
+│
+└── overlays/
+    ├── staging/          # Staging environment config
+    │   ├── kustomization.yaml
+    │   └── patch.yaml
+    │
+    └── production/       # Production environment config
+        ├── kustomization.yaml
+        └── patch.yaml
+⚙️ How It Works
+Base contains common Kubernetes resources
+Overlays apply environment-specific changes
+Kustomize builds final manifests per environment
+Git acts as the single source of truth
+Deployment is handled via GitOps tools like:
+Argo CD
+Flux CD
+🚀 Deployment Flow
+Developer creates a feature branch
+Changes are made in base or overlays
+Pull Request is opened
+After merge to main:
+CI validates manifests
+GitOps controller syncs cluster automatically
+🧪 Local Testing
+
+Validate manifests before commit:
+
+kubectl kustomize k8s/overlays/staging
+kubectl apply -k k8s/overlays/staging --dry-run=client
+📦 Apply Manifests Manually (Optional)
+kubectl apply -k k8s/overlays/staging
+kubectl apply -k k8s/overlays/production
+🔐 Authentication Note (Important)
+
+If using cloud clusters:
+
+Ensure kubeconfig is valid
+Remove deprecated credentials (e.g., old doctl configs)
+Verify context:
+kubectl config get-contexts
+kubectl config use-context <context-name>
+🔄 Branch Strategy (Recommended)
+main → production-ready manifests
+develop → staging integration
+feature branches → isolated changes
+🧠 Best Practices
+Never edit cluster directly
+Always go through Git PRs
+Keep base minimal and reusable
+Use overlays for environment drift control
+Version every deployment change
+📌 Future Enhancements
+Add Helm support
+Integrate CI validation (lint + policy checks)
+Add automated rollback strategy
+Add secret management (SealedSecrets / ExternalSecrets)
