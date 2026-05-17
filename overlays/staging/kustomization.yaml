@@ -1,0 +1,10 @@
+namespace: staging
+
+resources:
+  - ../../base
+  - namespace.yaml
+  - external-secret.yaml
+
+patchesStrategicMerge:
+  - replica-patch.yaml
+  - image-patch.yaml
